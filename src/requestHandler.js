@@ -4,7 +4,6 @@ const axios = require('axios');
 // returns JSON object with all matching results.
 const handleGofindRequest = img64Data => {
   let url = "http://localhost:5000/gofind";
-
   let options = { data: img64Data };
 
   return axios.post(url, options)
