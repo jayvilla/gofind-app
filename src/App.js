@@ -15,31 +15,31 @@ class App extends Component {
   renderResults() {
     let results = JSON.stringify(this.state.results);
 
-    return (
-      <div>{results}</div>
-    )
+    return <div>{results}</div>
   }
 
   handleSubmit(e) {
     e.preventDefault();
+    // Selects all of the files input by the user
     let filesSelected = document.getElementById('image').files;
+
     if (filesSelected.length > 0) {
       let fileToLoad = filesSelected[0];
       let fileReader = new FileReader();
+      // THe selected file is converted into a base64 format so
+      // that it can be passed to the API.
       fileReader.onload = fileLoadedEvent => {
         let base64value = fileLoadedEvent.target.result;
-        base64value = base64value.split(",");
-        base64value = base64value[1].toString();
-        this.setState({
-          base64value: base64value
-        })
+        base64value = base64value.split(",")[1].toString();
 
-        GofindRequest(this.state.base64value)
+        GofindRequest(base64value)
           .then( data => {
-            this.setState({ results: data });
+            this.setState({ base64value: base64value, results: data });
           })
       };
       fileReader.readAsDataURL(fileToLoad);
+    // After file has been converted and transformed. Reset the input
+    // field to empty.
     document.getElementById('image').value = '';
     }
   }
@@ -59,7 +59,7 @@ class App extends Component {
         </form>
         <div>
           <p>Response JSON object: </p>
-          {this.state.results ? this.renderResults() : ''}
+          {this.state.results ? this.renderResults() : <p>No file has been selected.</p>}
         </div>
       </div>
     );
